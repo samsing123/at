@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+		body {
+			font-family: Helvetica, Arial, sans-serif;
+			font-size: 12px;
+			background-color: #000;
+			margin: 0px;
+			overflow: hidden;
+		}
+		#edit {
+			position: absolute;
+			bottom: 20px;
+			right: 20px;
+			padding: 8px;
+			color: #555;
+			background-color: #fff;
+			opacity: 0.5;
+		}
+		#edit:hover {
+			cursor: pointer;
+			opacity: 1;
+		}
+		.loading {
+		  display: inline-block;
+		  margin: 5em;
+		  border-width: 30px;
+		  border-radius: 50%;
+		  -webkit-animation: spin 1s linear infinite;
+		     -moz-animation: spin 1s linear infinite;
+		       -o-animation: spin 1s linear infinite;
+		          animation: spin 1s linear infinite;
+		  }
+
+		.style-1 {
+		  border-style: solid;
+		  border-color: #444 transparent;
+		  }
+
+		.style-2 {
+		  border-style: double;
+		  border-color: #444 transparent;
+		  }
+
+		.style-3 {
+		  border-style: double;
+		  border-color: #444 #fff #fff;
+		  }
+
+		@-webkit-keyframes spin {
+		  100% { -webkit-transform: rotate(359deg); }
+		  }
+
+		@-moz-keyframes spin {
+		  100% { -moz-transform: rotate(359deg); }
+		  }
+
+		@-o-keyframes spin {
+		  100% { -moz-transform: rotate(359deg); }
+		  }
+
+		@keyframes spin {
+		  100% {  transform: rotate(359deg); }
+		  }
+
+		/* Base styles */
+		html {
+		  background: #eee ;
+		  text-align: center;
+		  }
+		</style>
+	</head>
+	<body ontouchstart="">
+		<span class="loading style-1" id="loadingSym"></span>
+		<script src="js/three.min.js"></script>
+		<script src="js/tween.js"></script>
+		<script src="js/app.js"></script>
+		<script src="./js/dat.min.js"></script>
+		<script src="./js/GPUParticleSystem.js" charset="utf-8"></script>
+
+		<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/175711/pnltri.min.js'></script>
+		<script src='http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js'></script>
+		<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/175711/bas.js'></script>
+		<script src="./js/expolsionParticleEffect.js" charset="utf-8"></script>
+
+		<!--animation for show the text explosion effect-->
+		<!--<div id="three-container"></div>-->
+		<script>
+
+			var loader = new THREE.XHRLoader();
+			loader.load( 'app.json', function ( text ) {
+
+				var json = JSON.parse( text );
+
+				var player = new APP.Player();
+				player.load( json );
+				player.setSize( window.innerWidth, window.innerHeight );
+				player.play();
+
+				document.body.appendChild( player.dom );
+
+				if ( json.project.editable === true ) {
+
+					var button = document.createElement( 'div' );
+					button.id = 'edit';
+					button.textContent = 'EDIT';
+					button.addEventListener( 'click', function ( event ) {
+
+						var url = location.href.split( '/' ).slice( 0, - 1 ).join( '/' );
+						window.open( 'http://threejs.org/editor/#file=' + url + '/app.json' );
+
+					}, false );
+					document.body.appendChild( button );
+
+				}
+
+				window.addEventListener( 'resize', function () {
+					player.setSize( window.innerWidth, window.innerHeight );
+				} );
+
+			},function(xhr){
+				if ( xhr.lengthComputable ) {
+					var percentComplete = xhr.loaded / xhr.total * 100;
+					if(Math.round(percentComplete, 2)){
+						document.getElementById('loadingSym').style.display = 'none';
+					}
+				}
+			} );
+
+		</script>
+	</body>
+</html>
